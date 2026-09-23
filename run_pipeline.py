@@ -1,6 +1,7 @@
 """Build the analytics database end to end: raw load -> clean -> star schema -> tests.
 
 Prerequisites:  python data/download_data.py
+Output:         data/complaints.duckdb, plus Parquet files for Power BI in dashboard/data/
 Usage:          python run_pipeline.py              (full rebuild, ~2-3 min)
                 python run_pipeline.py --skip-raw   (reuse the loaded raw table)
 """
@@ -30,6 +31,12 @@ def main() -> None:
         print(f"  [{'PASS' if failed == 0 else 'FAIL'}] {test}" + (f" ({failed} rows)" if failed else ""))
     if any(failed for _, failed in results):
         sys.exit("Validation failed.")
+
+    # Export only after every test passes, so Power BI never gets bad data
+    (ROOT / "dashboard" / "data").mkdir(parents=True, exist_ok=True)
+    start = time.time()
+    con.execute((ROOT / "sql" / "04_export_powerbi.sql").read_text())
+    print(f"{'04_export_powerbi.sql':<18} done in {time.time() - start:5.1f}s")
 
     for table in ["fact_complaints", "dim_company", "dim_product", "dim_issue", "dim_geography", "dim_date"]:
         print(f"{table:<16} {con.sql(f'SELECT COUNT(*) FROM {table}').fetchone()[0]:>12,} rows")

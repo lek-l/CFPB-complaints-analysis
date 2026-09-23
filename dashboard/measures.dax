@@ -1,0 +1,165 @@
+// measures.dax
+// All DAX measures for the CFPB Complaints dashboard.
+// In Power BI Desktop: select the _Measures table > Home > New measure, then
+// paste ONE measure at a time (everything from the name to the blank line).
+//
+// Design rule: the fact table stores counts (numerators and denominators),
+// never percentages, so every rate below is exact at any level of filtering.
+// Table names match the Parquet file names loaded in the guide.
+
+// ─── Base counts ─────────────────────────────────────────────────────────────
+
+Complaints =
+SUM ( fact_complaints_monthly[complaints] )
+
+Timely Responses =
+SUM ( fact_complaints_monthly[timely_count] )
+
+Closed Complaints =
+SUM ( fact_complaints_monthly[closed_count] )
+
+Relief Complaints =
+SUM ( fact_complaints_monthly[relief_count] )
+
+Monetary Relief Complaints =
+SUM ( fact_complaints_monthly[monetary_relief_count] )
+
+// ─── Response performance (Business question 2) ─────────────────────────────
+
+// Share of complaints the company answered within the CFPB's 15-day window.
+Timely Response % =
+DIVIDE ( [Timely Responses], [Complaints] )
+
+// Relief rate uses CLOSED complaints as the denominator: in-progress and
+// untimely complaints have no outcome yet, so including them would understate it.
+Relief Rate % =
+DIVIDE ( [Relief Complaints], [Closed Complaints] )
+
+// The "closed without relief" rate (see docs/data_cleaning.md, D12).
+No Relief Rate % =
+DIVIDE ( [Closed Complaints] - [Relief Complaints], [Closed Complaints] )
+
+Monetary Relief % =
+DIVIDE ( [Monetary Relief Complaints], [Closed Complaints] )
+
+// ─── Time intelligence (Business questions 1 and 5) ─────────────────────────
+// These need dim_date marked as the date table (guide, Part 2).
+
+Complaints PY =
+CALCULATE ( [Complaints], SAMEPERIODLASTYEAR ( dim_date[date] ) )
+
+Complaints YoY % =
+DIVIDE ( [Complaints] - [Complaints PY], [Complaints PY] )
+
+Complaints PM =
+CALCULATE ( [Complaints], DATEADD ( dim_date[date], -1, MONTH ) )
+
+Complaints MoM % =
+DIVIDE ( [Complaints] - [Complaints PM], [Complaints PM] )
+
+// Rolling averages: average of the monthly totals in the trailing window.
+// Returns blank for months with no data so the line stops at Aug 2026.
+Complaints 3M Avg =
+VAR _end = MAX ( dim_date[date] )
+VAR _months =
+    CALCULATETABLE (
+        ADDCOLUMNS ( VALUES ( dim_date[month_start] ), "@complaints", [Complaints] ),
+        DATESINPERIOD ( dim_date[date], _end, -3, MONTH )
+    )
+RETURN
+    IF ( ISBLANK ( [Complaints] ), BLANK (), AVERAGEX ( _months, [@complaints] ) )
+
+Complaints 12M Avg =
+VAR _end = MAX ( dim_date[date] )
+VAR _months =
+    CALCULATETABLE (
+        ADDCOLUMNS ( VALUES ( dim_date[month_start] ), "@complaints", [Complaints] ),
+        DATESINPERIOD ( dim_date[date], _end, -12, MONTH )
+    )
+RETURN
+    IF ( ISBLANK ( [Complaints] ), BLANK (), AVERAGEX ( _months, [@complaints] ) )
+
+// Most recent month that has data within the current filters (for KPI labels).
+Latest Data Month =
+MAXX (
+    FILTER ( VALUES ( dim_date[month_start] ), NOT ISBLANK ( [Complaints] ) ),
+    dim_date[month_start]
+)
+
+Complaints Latest Month =
+VAR _latest = [Latest Data Month]
+RETURN
+    CALCULATE ( [Complaints], dim_date[month_start] = _latest )
+
+// Growth indexed to 2018 = 100: compares banks of different sizes fairly.
+Complaints Index (2018 = 100) =
+DIVIDE (
+    [Complaints],
+    CALCULATE ( [Complaints], REMOVEFILTERS ( dim_date ), dim_date[year] = 2018 )
+) * 100
+
+// ─── Geography (Business question 3) ────────────────────────────────────────
+
+// Population of the selected states (50 states + DC only).
+Population =
+CALCULATE ( SUM ( dim_geography[population_2025] ), dim_geography[is_state] = TRUE () )
+
+// Number of complete months in the selected period, used to annualize.
+Months Selected =
+CALCULATE (
+    DISTINCTCOUNT ( dim_date[month_start] ),
+    dim_date[is_complete_month] = TRUE ()
+)
+
+// Complaints per 100K residents per year. Annualizing means the value is
+// comparable whether the date slicer covers 3 months or 8 years.
+// With the date slicer set to 2025 this matches results/q3a_state_per_capita_2025.csv.
+Complaints per 100K (annualized) =
+VAR _stateComplaints =
+    CALCULATE ( [Complaints], dim_geography[is_state] = TRUE () )
+RETURN
+    DIVIDE ( _stateComplaints * 12 / [Months Selected], [Population] ) * 100000
+
+// ─── Market context ─────────────────────────────────────────────────────────
+
+// Bureau share of ALL complaints, ignoring the company slicers on purpose.
+Credit Bureau Share % =
+DIVIDE (
+    CALCULATE ( [Complaints], REMOVEFILTERS ( dim_company ), dim_company[is_credit_bureau] = TRUE () ),
+    CALCULATE ( [Complaints], REMOVEFILTERS ( dim_company ) )
+)
+
+// Share of the current company's complaints (use with product on rows/legend).
+Share of Company Complaints % =
+DIVIDE ( [Complaints], CALCULATE ( [Complaints], REMOVEFILTERS ( dim_product ) ) )
+
+// ─── Peer benchmark (Business question 4) ───────────────────────────────────
+
+// Simple average of the five peers' rates (each bank weighted equally),
+// matching results/q4a_scorecard.csv.
+Peer Avg Relief Rate % =
+CALCULATE (
+    AVERAGEX ( VALUES ( dim_company[company_label] ), [Relief Rate %] ),
+    REMOVEFILTERS ( dim_company ),
+    dim_company[peer_role] = "Peer"
+)
+
+Relief Rate vs Peer Avg =
+[Relief Rate %] - [Peer Avg Relief Rate %]
+
+Overdraft Share % =
+DIVIDE (
+    CALCULATE ( [Complaints], dim_issue[issue] = "Problem caused by your funds being low" ),
+    [Complaints]
+)
+
+Overdraft Share % (Regions) =
+CALCULATE ( [Overdraft Share %], REMOVEFILTERS ( dim_company ), dim_company[company_label] = "Regions" )
+
+Overdraft Share % (Peers) =
+CALCULATE ( [Overdraft Share %], REMOVEFILTERS ( dim_company ), dim_company[peer_role] = "Peer" )
+
+// Focus + context coloring: Regions in the primary blue, peers in gray.
+// Used via Format > Bars > Colors > fx (Field value).
+Bar Color (Regions Highlight) =
+IF ( SELECTEDVALUE ( dim_company[company_label] ) = "Regions", "#2a78d6", "#c3c2b7" )
