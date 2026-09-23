@@ -1,0 +1,19 @@
+bank,issue,complaints,pct_of_bank,issue_rank
+Citizens,Managing an account,3790,28.1,1
+Citizens,Trouble during payment process,1277,9.5,2
+Citizens,Incorrect information on your report,934,6.9,3
+Fifth Third,Managing an account,2598,23.4,1
+Fifth Third,Trouble during payment process,1359,12.2,2
+Fifth Third,Incorrect information on your report,945,8.5,3
+Huntington,Managing an account,2537,35.4,1
+Huntington,Closing an account,624,8.7,2
+Huntington,Problem with a lender or other company charging your account,431,6.0,3
+KeyCorp,Managing an account,1965,34.4,1
+KeyCorp,Opening an account,365,6.4,2
+KeyCorp,Closing an account,336,5.9,3
+M&T,Managing an account,1646,24.7,1
+M&T,Trouble during payment process,1151,17.2,2
+M&T,Struggling to pay mortgage,635,9.5,3
+Regions,Managing an account,2294,32.7,1
+Regions,Problem caused by your funds being low,562,8.0,2
+Regions,Incorrect information on your report,558,8.0,3

@@ -1,0 +1,84 @@
+product_group,year,complaints,prior_year,yoy_pct,x_vs_2018
+Checking or savings account,2018,21207,,,1.0
+Checking or savings account,2019,21734,21207,2.5,1.02
+Checking or savings account,2020,24238,21734,11.5,1.14
+Checking or savings account,2021,29556,24238,21.9,1.39
+Checking or savings account,2022,37582,29556,27.2,1.77
+Checking or savings account,2023,49873,37582,32.7,2.35
+Checking or savings account,2024,52821,49873,5.9,2.49
+Checking or savings account,2025,84195,52821,59.4,3.97
+Credit card,2018,22960,,,1.0
+Credit card,2019,23965,22960,4.4,1.04
+Credit card,2020,28526,23965,19.0,1.24
+Credit card,2021,27656,28526,-3.0,1.2
+Credit card,2022,36582,27656,32.3,1.59
+Credit card,2023,54413,36582,48.7,2.37
+Credit card,2024,75989,54413,39.7,3.31
+Credit card,2025,89978,75989,18.4,3.92
+Credit reporting,2018,111596,,,1.0
+Credit reporting,2019,138556,111596,24.2,1.24
+Credit reporting,2020,283715,138556,104.8,2.54
+Credit reporting,2021,307538,283715,8.4,2.76
+Credit reporting,2022,604181,307538,96.5,5.41
+Credit reporting,2023,1046869,604181,73.3,9.38
+Credit reporting,2024,2365586,1046869,126.0,21.2
+Credit reporting,2025,4810301,2365586,103.3,43.1
+Debt collection,2018,51078,,,1.0
+Debt collection,2019,46333,51078,-9.3,0.91
+Debt collection,2020,53868,46333,16.3,1.05
+Debt collection,2021,70300,53868,30.5,1.38
+Debt collection,2022,59438,70300,-15.5,1.16
+Debt collection,2023,68107,59438,14.6,1.33
+Debt collection,2024,155894,68107,128.9,3.05
+Debt collection,2025,283204,155894,81.7,5.54
+Debt or credit management,2023,484,,,1.0
+Debt or credit management,2024,2413,484,398.6,4.99
+Debt or credit management,2025,4266,2413,76.8,8.81
+Money transfer or virtual currency,2018,5430,,,1.0
+Money transfer or virtual currency,2019,5082,5430,-6.4,0.94
+Money transfer or virtual currency,2020,8306,5082,63.4,1.53
+Money transfer or virtual currency,2021,13896,8306,67.3,2.56
+Money transfer or virtual currency,2022,13534,13896,-2.6,2.49
+Money transfer or virtual currency,2023,13749,13534,1.6,2.53
+Money transfer or virtual currency,2024,16751,13749,21.8,3.08
+Money transfer or virtual currency,2025,84619,16751,405.2,15.58
+Mortgage,2018,24564,,,1.0
+Mortgage,2019,22701,24564,-7.6,0.92
+Mortgage,2020,24652,22701,8.6,1.0
+Mortgage,2021,26527,24652,7.6,1.08
+Mortgage,2022,23278,26527,-12.2,0.95
+Mortgage,2023,22853,23278,-1.8,0.93
+Mortgage,2024,21439,22853,-6.2,0.87
+Mortgage,2025,24697,21439,15.2,1.01
+"Payday, title or personal loan",2018,4361,,,1.0
+"Payday, title or personal loan",2019,4318,4361,-1.0,0.99
+"Payday, title or personal loan",2020,4199,4318,-2.8,0.96
+"Payday, title or personal loan",2021,4352,4199,3.6,1.0
+"Payday, title or personal loan",2022,5762,4352,32.4,1.32
+"Payday, title or personal loan",2023,7243,5762,25.7,1.66
+"Payday, title or personal loan",2024,9036,7243,24.8,2.07
+"Payday, title or personal loan",2025,13137,9036,45.4,3.01
+Prepaid card,2018,1282,,,1.0
+Prepaid card,2019,1858,1282,44.9,1.45
+Prepaid card,2020,5353,1858,188.1,4.18
+Prepaid card,2021,4166,5353,-22.2,3.25
+Prepaid card,2022,3297,4166,-20.9,2.57
+Prepaid card,2023,5031,3297,52.6,3.92
+Prepaid card,2024,6323,5031,25.7,4.93
+Prepaid card,2025,6502,6323,2.8,5.07
+Student loan,2018,8769,,,1.0
+Student loan,2019,7208,8769,-17.8,0.82
+Student loan,2020,4385,7208,-39.2,0.5
+Student loan,2021,4126,4385,-5.9,0.47
+Student loan,2022,7952,4126,92.7,0.91
+Student loan,2023,10633,7952,33.7,1.21
+Student loan,2024,14657,10633,37.8,1.67
+Student loan,2025,21295,14657,45.3,2.43
+Vehicle loan or lease,2018,5884,,,1.0
+Vehicle loan or lease,2019,5485,5884,-6.8,0.93
+Vehicle loan or lease,2020,6971,5485,27.1,1.18
+Vehicle loan or lease,2021,7823,6971,12.2,1.33
+Vehicle loan or lease,2022,8639,7823,10.4,1.47
+Vehicle loan or lease,2023,12794,8639,48.1,2.17
+Vehicle loan or lease,2024,13360,12794,4.4,2.27
+Vehicle loan or lease,2025,20769,13360,55.5,3.53

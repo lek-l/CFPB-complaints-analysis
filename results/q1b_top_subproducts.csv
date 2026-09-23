@@ -1,0 +1,32 @@
+product_group,subproduct,complaints,pct_of_group,rank_in_group,group_total
+Debt collection,I do not know,375822,44.4,1,845912.0
+Debt collection,Credit card debt,152569,18.0,2,845912.0
+Debt collection,Other debt,134219,15.9,3,845912.0
+Credit reporting,Credit reporting,802088,96.6,1,830282.0
+Credit reporting,Other personal consumer report,25296,3.0,2,830282.0
+Credit reporting,Credit repair services,2897,0.3,3,830282.0
+Checking or savings account,Checking account,309707,81.3,1,380906.0
+Checking or savings account,Other banking product or service,34788,9.1,2,380906.0
+Checking or savings account,Savings account,28820,7.6,3,380906.0
+Credit card,General-purpose credit card or charge card,314793,85.7,1,367383.0
+Credit card,Store credit card,52590,14.3,2,367383.0
+Mortgage,Conventional home mortgage,127868,59.9,1,213498.0
+Mortgage,FHA mortgage,36622,17.2,2,213498.0
+Mortgage,VA mortgage,17507,8.2,3,213498.0
+Money transfer or virtual currency,Domestic (US) money transfer,84248,45.0,1,187142.0
+Money transfer or virtual currency,Mobile or digital wallet,59105,31.6,2,187142.0
+Money transfer or virtual currency,Virtual currency,20848,11.1,3,187142.0
+Vehicle loan or lease,Loan,83179,85.8,1,96942.0
+Vehicle loan or lease,Lease,13720,14.2,2,96942.0
+Vehicle loan or lease,Title loan,43,0.0,3,96942.0
+Student loan,Federal student loan servicing,70264,76.0,1,92450.0
+Student loan,Private student loan,22186,24.0,2,92450.0
+"Payday, title or personal loan",Installment loan,33160,51.5,1,64380.0
+"Payday, title or personal loan",Personal line of credit,13219,20.5,2,64380.0
+"Payday, title or personal loan",Payday loan,11779,18.3,3,64380.0
+Prepaid card,General-purpose prepaid card,18393,48.7,1,37751.0
+Prepaid card,Government benefit card,14010,37.1,2,37751.0
+Prepaid card,Gift card,3433,9.1,3,37751.0
+Debt or credit management,Debt settlement,5084,60.5,1,8401.0
+Debt or credit management,Credit repair services,2816,33.5,2,8401.0
+Debt or credit management,Mortgage modification or foreclosure avoidance,370,4.4,3,8401.0

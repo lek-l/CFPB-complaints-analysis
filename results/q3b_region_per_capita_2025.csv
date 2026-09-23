@@ -1,0 +1,5 @@
+census_region,population,complaints,per_100k,per_100k_excl_bureaus
+South,133833983.0,3155565,2358.0,301.0
+Northeast,58042054.0,777540,1340.0,191.0
+West,80146154.0,791131,987.0,168.0
+Midwest,69762666.0,682500,978.0,169.0

@@ -1,0 +1,49 @@
+bank,year,complaints,index_2018_100
+Citizens,2018,956,100.0
+Citizens,2019,1018,106.0
+Citizens,2020,905,95.0
+Citizens,2021,1336,140.0
+Citizens,2022,1826,191.0
+Citizens,2023,2031,212.0
+Citizens,2024,1973,206.0
+Citizens,2025,2017,211.0
+Fifth Third,2018,824,100.0
+Fifth Third,2019,941,114.0
+Fifth Third,2020,986,120.0
+Fifth Third,2021,1127,137.0
+Fifth Third,2022,1198,145.0
+Fifth Third,2023,1308,159.0
+Fifth Third,2024,1389,169.0
+Fifth Third,2025,1697,206.0
+Huntington,2018,439,100.0
+Huntington,2019,413,94.0
+Huntington,2020,403,92.0
+Huntington,2021,666,152.0
+Huntington,2022,793,181.0
+Huntington,2023,858,195.0
+Huntington,2024,910,207.0
+Huntington,2025,1243,283.0
+KeyCorp,2018,593,100.0
+KeyCorp,2019,499,84.0
+KeyCorp,2020,626,106.0
+KeyCorp,2021,637,107.0
+KeyCorp,2022,632,107.0
+KeyCorp,2023,674,114.0
+KeyCorp,2024,620,105.0
+KeyCorp,2025,804,136.0
+M&T,2018,505,100.0
+M&T,2019,543,108.0
+M&T,2020,513,102.0
+M&T,2021,541,107.0
+M&T,2022,736,146.0
+M&T,2023,822,163.0
+M&T,2024,904,179.0
+M&T,2025,1142,226.0
+Regions,2018,548,100.0
+Regions,2019,596,109.0
+Regions,2020,618,113.0
+Regions,2021,695,127.0
+Regions,2022,810,148.0
+Regions,2023,868,158.0
+Regions,2024,880,161.0
+Regions,2025,1113,203.0
