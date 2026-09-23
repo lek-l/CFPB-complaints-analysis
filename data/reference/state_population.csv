@@ -1,0 +1,53 @@
+state_code,state_name,census_region,population_2025
+AK,Alaska,West,737270
+AL,Alabama,South,5193088
+AR,Arkansas,South,3114791
+AZ,Arizona,West,7623818
+CA,California,West,39355309
+CO,Colorado,West,6012561
+CT,Connecticut,Northeast,3688496
+DC,District of Columbia,South,693645
+DE,Delaware,South,1059952
+FL,Florida,South,23462518
+GA,Georgia,South,11302748
+HI,Hawaii,West,1432820
+IA,Iowa,Midwest,3238387
+ID,Idaho,West,2029733
+IL,Illinois,Midwest,12719141
+IN,Indiana,Midwest,6973333
+KS,Kansas,Midwest,2977220
+KY,Kentucky,South,4606864
+LA,Louisiana,South,4618189
+MA,Massachusetts,Northeast,7154084
+MD,Maryland,South,6265347
+ME,Maine,Northeast,1414874
+MI,Michigan,Midwest,10127884
+MN,Minnesota,Midwest,5830405
+MO,Missouri,Midwest,6270541
+MS,Mississippi,South,2954160
+MT,Montana,West,1144694
+NC,North Carolina,South,11197968
+ND,North Dakota,Midwest,799358
+NE,Nebraska,Midwest,2018006
+NH,New Hampshire,Northeast,1415342
+NJ,New Jersey,Northeast,9548215
+NM,New Mexico,West,2125498
+NV,Nevada,West,3282188
+NY,New York,Northeast,20002427
+OH,Ohio,Midwest,11900510
+OK,Oklahoma,South,4123288
+OR,Oregon,West,4273586
+PA,Pennsylvania,Northeast,13059432
+PR,Puerto Rico,Territory,3184835
+RI,Rhode Island,Northeast,1114521
+SC,South Carolina,South,5570274
+SD,South Dakota,Midwest,935094
+TN,Tennessee,South,7315076
+TX,Texas,South,31709821
+UT,Utah,West,3538904
+VA,Virginia,South,8880107
+VT,Vermont,Northeast,644663
+WA,Washington,West,8001020
+WI,Wisconsin,Midwest,5972787
+WV,West Virginia,South,1766147
+WY,Wyoming,West,588753
