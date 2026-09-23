@@ -1,0 +1,8 @@
+# Raw data is large and re-downloadable: never commit it
+data/raw/
+*.duckdb
+*.duckdb.wal
+.venv/
+__pycache__/
+.ipynb_checkpoints/
+.env
