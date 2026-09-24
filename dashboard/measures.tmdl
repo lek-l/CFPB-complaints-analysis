@@ -1,0 +1,214 @@
+createOrReplace
+
+	ref table _Measures
+
+		measure 'Complaints' = ```
+				SUM ( fact_complaints_monthly[complaints] )
+				```
+			formatString: #,0
+			displayFolder: Counts
+
+		measure 'Timely Responses' = ```
+				SUM ( fact_complaints_monthly[timely_count] )
+				```
+			formatString: #,0
+			displayFolder: Counts
+
+		measure 'Closed Complaints' = ```
+				SUM ( fact_complaints_monthly[closed_count] )
+				```
+			formatString: #,0
+			displayFolder: Counts
+
+		measure 'Relief Complaints' = ```
+				SUM ( fact_complaints_monthly[relief_count] )
+				```
+			formatString: #,0
+			displayFolder: Counts
+
+		measure 'Monetary Relief Complaints' = ```
+				SUM ( fact_complaints_monthly[monetary_relief_count] )
+				```
+			formatString: #,0
+			displayFolder: Counts
+
+		measure 'Timely Response %' = ```
+				DIVIDE ( [Timely Responses], [Complaints] )
+				```
+			formatString: 0.0%
+			displayFolder: Response rates
+
+		measure 'Relief Rate %' = ```
+				DIVIDE ( [Relief Complaints], [Closed Complaints] )
+				```
+			formatString: 0.0%
+			displayFolder: Response rates
+
+		measure 'No Relief Rate %' = ```
+				DIVIDE ( [Closed Complaints] - [Relief Complaints], [Closed Complaints] )
+				```
+			formatString: 0.0%
+			displayFolder: Response rates
+
+		measure 'Monetary Relief %' = ```
+				DIVIDE ( [Monetary Relief Complaints], [Closed Complaints] )
+				```
+			formatString: 0.0%
+			displayFolder: Response rates
+
+		measure 'Complaints PY' = ```
+				CALCULATE ( [Complaints], SAMEPERIODLASTYEAR ( dim_date[date] ) )
+				```
+			formatString: #,0
+			displayFolder: Time
+
+		measure 'Complaints YoY %' = ```
+				DIVIDE ( [Complaints] - [Complaints PY], [Complaints PY] )
+				```
+			formatString: 0.0%
+			displayFolder: Time
+
+		measure 'Complaints PM' = ```
+				CALCULATE ( [Complaints], DATEADD ( dim_date[date], -1, MONTH ) )
+				```
+			formatString: #,0
+			displayFolder: Time
+
+		measure 'Complaints MoM %' = ```
+				DIVIDE ( [Complaints] - [Complaints PM], [Complaints PM] )
+				```
+			formatString: 0.0%
+			displayFolder: Time
+
+		measure 'Complaints 3M Avg' = ```
+				VAR _end = MAX ( dim_date[date] )
+				VAR _months =
+				    CALCULATETABLE (
+				        ADDCOLUMNS ( VALUES ( dim_date[month_start] ), "@complaints", [Complaints] ),
+				        DATESINPERIOD ( dim_date[date], _end, -3, MONTH )
+				    )
+				RETURN
+				    IF ( ISBLANK ( [Complaints] ), BLANK (), AVERAGEX ( _months, [@complaints] ) )
+				```
+			formatString: #,0
+			displayFolder: Time
+
+		measure 'Complaints 12M Avg' = ```
+				VAR _end = MAX ( dim_date[date] )
+				VAR _months =
+				    CALCULATETABLE (
+				        ADDCOLUMNS ( VALUES ( dim_date[month_start] ), "@complaints", [Complaints] ),
+				        DATESINPERIOD ( dim_date[date], _end, -12, MONTH )
+				    )
+				RETURN
+				    IF ( ISBLANK ( [Complaints] ), BLANK (), AVERAGEX ( _months, [@complaints] ) )
+				```
+			formatString: #,0
+			displayFolder: Time
+
+		measure 'Latest Data Month' = ```
+				MAXX (
+				    FILTER ( VALUES ( dim_date[month_start] ), NOT ISBLANK ( [Complaints] ) ),
+				    dim_date[month_start]
+				)
+				```
+			formatString: mmm yyyy
+			displayFolder: Time
+
+		measure 'Complaints Latest Month' = ```
+				VAR _latest = [Latest Data Month]
+				RETURN
+				    CALCULATE ( [Complaints], dim_date[month_start] = _latest )
+				```
+			formatString: #,0
+			displayFolder: Time
+
+		measure 'Complaints Index (2018 = 100)' = ```
+				DIVIDE (
+				    [Complaints],
+				    CALCULATE ( [Complaints], REMOVEFILTERS ( dim_date ), dim_date[year] = 2018 )
+				) * 100
+				```
+			formatString: #,0
+			displayFolder: Time
+
+		measure 'Population' = ```
+				CALCULATE ( SUM ( dim_geography[population_2025] ), dim_geography[is_state] = TRUE () )
+				```
+			formatString: #,0
+			displayFolder: Geography
+
+		measure 'Months Selected' = ```
+				CALCULATE (
+				    DISTINCTCOUNT ( dim_date[month_start] ),
+				    dim_date[is_complete_month] = TRUE ()
+				)
+				```
+			formatString: #,0
+			displayFolder: Geography
+
+		measure 'Complaints per 100K (annualized)' = ```
+				VAR _stateComplaints =
+				    CALCULATE ( [Complaints], dim_geography[is_state] = TRUE () )
+				RETURN
+				    DIVIDE ( _stateComplaints * 12 / [Months Selected], [Population] ) * 100000
+				```
+			formatString: #,0
+			displayFolder: Geography
+
+		measure 'Credit Bureau Share %' = ```
+				DIVIDE (
+				    CALCULATE ( [Complaints], REMOVEFILTERS ( dim_company ), dim_company[is_credit_bureau] = TRUE () ),
+				    CALCULATE ( [Complaints], REMOVEFILTERS ( dim_company ) )
+				)
+				```
+			formatString: 0.0%
+			displayFolder: Market
+
+		measure 'Share of Company Complaints %' = ```
+				DIVIDE ( [Complaints], CALCULATE ( [Complaints], REMOVEFILTERS ( dim_product ) ) )
+				```
+			formatString: 0.0%
+			displayFolder: Market
+
+		measure 'Peer Avg Relief Rate %' = ```
+				CALCULATE (
+				    AVERAGEX ( VALUES ( dim_company[company_label] ), [Relief Rate %] ),
+				    REMOVEFILTERS ( dim_company ),
+				    dim_company[peer_role] = "Peer"
+				)
+				```
+			formatString: 0.0%
+			displayFolder: Peers
+
+		measure 'Relief Rate vs Peer Avg' = ```
+				[Relief Rate %] - [Peer Avg Relief Rate %]
+				```
+			formatString: 0.0%
+			displayFolder: Peers
+
+		measure 'Overdraft Share %' = ```
+				DIVIDE (
+				    CALCULATE ( [Complaints], dim_issue[issue] = "Problem caused by your funds being low" ),
+				    [Complaints]
+				)
+				```
+			formatString: 0.0%
+			displayFolder: Peers
+
+		measure 'Overdraft Share % (Regions)' = ```
+				CALCULATE ( [Overdraft Share %], REMOVEFILTERS ( dim_company ), dim_company[company_label] = "Regions" )
+				```
+			formatString: 0.0%
+			displayFolder: Peers
+
+		measure 'Overdraft Share % (Peers)' = ```
+				CALCULATE ( [Overdraft Share %], REMOVEFILTERS ( dim_company ), dim_company[peer_role] = "Peer" )
+				```
+			formatString: 0.0%
+			displayFolder: Peers
+
+		measure 'Bar Color (Regions Highlight)' = ```
+				IF ( SELECTEDVALUE ( dim_company[company_label] ) = "Regions", "#2a78d6", "#c3c2b7" )
+				```
+			displayFolder: Peers
