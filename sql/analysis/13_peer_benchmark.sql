@@ -31,6 +31,7 @@ SELECT b.bank,
        b.complaints_2025,
        ROUND(100 * b.timely_rate, 2)                   AS timely_pct,
        ROUND(100 * b.relief_rate, 1)                   AS relief_pct,
+       ROUND(100 * p.relief, 1)                        AS peer_avg_relief_pct,
        ROUND(100 * (b.relief_rate - p.relief), 1)      AS relief_pts_vs_peer_avg,
        ROUND(100 * b.monetary_rate, 1)                 AS monetary_relief_pct,
        ROUND(100 * (b.monetary_rate - p.monetary), 1)  AS monetary_pts_vs_peer_avg,
@@ -66,7 +67,7 @@ SELECT product_group,
        ROUND(100 * peer_avg_share, 1)                   AS peer_avg_pct,
        ROUND(100 * (regions_share - peer_avg_share), 1) AS gap_pts
 FROM compare
-ORDER BY regions_pct DESC;
+ORDER BY regions_pct DESC, peer_avg_pct DESC, product_group;  -- tie-breakers keep output stable run to run
 
 -- @query: q4c_top_issues
 -- Top 3 issues per bank and their share of that bank's complaints.

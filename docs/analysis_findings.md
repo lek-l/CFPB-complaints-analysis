@@ -27,7 +27,7 @@ Every number below comes from a CSV in `results/`, produced by `python notebooks
 
 Peers: Fifth Third, Huntington, KeyCorp, M&T, Citizens.
 
-- **Response performance:** Regions is timely on 99.96% of complaints and gives relief on **25.1%, ranking #2 of 6**. That is 4.1 points above the peer average. Only Huntington is higher, at 31.6%. *(q4a)*
+- **Response performance:** Regions is timely on 99.96% of complaints and gives relief on **25.1%, ranking #2 of 6**. The peer average is 21.1% (Regions is 4.1 points above it, computed on unrounded rates). Only Huntington is higher, at 31.6%. *(q4a)*
 - **Product mix:** Regions over-indexes on **checking/savings (55.3% of its complaints vs 47.8% for peers)** and under-indexes on mortgage (8.4% vs 17.9%). *(q4b)*
 - **Overdraft stands out.** "Problem caused by your funds being low" (overdraft/NSF fees) is Regions' **#2 issue at 8.0%**, and it isn't in any peer's top 3. In 2025 it was **10.1% of Regions' complaints vs 4.0% for peers**, up from 5.5% in 2023. This comes after the CFPB's $191M surprise-overdraft order against Regions in Sept 2022. *(q4c, q4e)*
 - **Volume growth:** Regions' 2025 complaints are at 203% of their 2018 level (2018 = 100), in the middle of the peer range of 136–283. *(q4d)*
@@ -35,7 +35,7 @@ Peers: Fifth Third, Huntington, KeyCorp, M&T, Citizens.
 ## Q5. Monthly trends (`14_monthly_trends.sql`)
 
 - Monthly volume reached **659,049 in Aug 2026**, with a 12-month rolling average of 572,926. Excluding the bureaus, the 12-month rolling average **more than doubled** from 30,414 (Jul 2024) to 70,948 (Aug 2026). *(q5)*
-- **January 2025 spike:** non-bureau complaints reached 123,553, about double the months around it. Four companies account for 76% of the increase: Block/Cash App (+30,953), Early Warning/Zelle (+16,767), Navy Federal (+7,429) and Capital One (+5,714). Non-bureau complaints peaked on Jan 17 (20,877 in one day), the day after the **CFPB's $175M Cash App order on Jan 16, 2025**. In other words, enforcement news triggers complaint surges. *(q5, q5b)*
+- **January 2025 spike:** non-bureau complaints reached 123,553, about double the months around it. Four companies account for 76% of the increase: Block/Cash App (+30,953), Early Warning/Zelle (+16,767), Navy Federal (+7,429) and Capital One (+5,714). Non-bureau complaints peaked on Jan 17 (20,877 in one day), the day after the **CFPB's $175M Cash App order on Jan 16, 2025**. The timing suggests enforcement news can trigger complaint surges (a correlation in timing, not proof of cause). *(q5, q5b)*
 
 ## Caveats
 
