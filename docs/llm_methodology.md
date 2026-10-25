@@ -43,7 +43,7 @@ The pipeline supports two providers with the identical prompt and schema:
 | Provider | How it runs | Estimated cost, full sample |
 |---|---|---|
 | Claude (`llm/claude_backend.py`) | Message Batches API (50% discount), structured outputs | ~$58 on Claude Opus 5, ~$12 on Claude Haiku 4.5 (dry-run estimate) |
-| Groq + Llama (`llm/groq_backend.py`) | One request at a time, JSON mode, temperature 0 | See Groq pricing and your plan's daily token limit |
+| Groq + GPT-OSS 120B (`llm/groq_backend.py`) | One request at a time, strict structured outputs, low reasoning effort | ~$3 (Developer plan; the free plan's 200K tokens/day cap is too low) |
 
 `--dry-run` prints the estimate without calling any API; `--limit 50` runs a pilot. Results are appended to a log and the script resumes after interruptions without paying twice.
 

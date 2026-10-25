@@ -25,10 +25,12 @@ from llm.taxonomy import SYSTEM_PROMPT, user_message  # noqa: E402
 
 SAMPLE = ROOT / "data" / "llm" / "sample.parquet"
 
-# Batch prices per 1M tokens (input, output). Claude Batches are 50% of list price.
+# Prices per 1M tokens (input, output), checked 2026-09-26. Claude rows are
+# Message Batches prices (50% of list); Groq is the Developer-plan list price.
 PRICES = {
-    "claude-opus-5": (2.50, 12.50),
-    "claude-haiku-4-5": (0.50, 2.50),
+    "claude-opus-5 (batch)": (2.50, 12.50),
+    "claude-haiku-4-5 (batch)": (0.50, 2.50),
+    "groq openai/gpt-oss-120b": (0.15, 0.60),
 }
 
 
@@ -76,8 +78,8 @@ def main() -> None:
         out_tok = len(rows) * 250  # JSON answer plus a little thinking, estimated
         print(f"{len(rows):,} complaints to classify, ~{in_tok / 1e6:.1f}M input tokens, ~{out_tok / 1e6:.1f}M output tokens")
         for model, (pin, pout) in PRICES.items():
-            print(f"  {model:<18} ~${in_tok / 1e6 * pin + out_tok / 1e6 * pout:,.0f} (Batch API)")
-        print("  Groq: check console.groq.com for pricing and your plan's daily token limit before a full run.")
+            print(f"  {model:<26} ~${in_tok / 1e6 * pin + out_tok / 1e6 * pout:,.2f}")
+        print("  Groq free plan caps each model at 200K tokens/day; a full run needs the Developer plan.")
         if rows:
             print("\n--- Example user message ---\n" + user_message(rows[0]["narrative"], rows[0]["product"])[:1200])
         return
