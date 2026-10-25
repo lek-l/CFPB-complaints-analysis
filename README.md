@@ -4,7 +4,7 @@ An end-to-end analytics project on the **CFPB Consumer Complaint Database**: 17.
 
 **Stack:** Python (pandas) · SQL (DuckDB) · Power BI + DAX · statistical testing · FDIC & Census APIs · LLM API (Claude, or open-weight GPT-OSS via Groq) · Parquet · Git
 
-> **Status:** complete: data pipeline, SQL analysis, statistical tests, early-warning system and the 4-page Power BI dashboard. The LLM classification pipeline is built and tested; the classification run is optional and not yet done.
+> **Status:** complete: data pipeline, SQL analysis, statistical tests, early-warning system and the 5-page Power BI dashboard. The LLM classification pipeline is built and tested; the classification run is optional and not yet done.
 
 ---
 
@@ -46,7 +46,7 @@ Stakeholder summary with recommendations: [docs/stakeholder_brief.md](docs/stake
 
 ## Dashboard
 
-Four interactive Power BI pages (Executive Overview, Product & Issue Trends, Company Benchmarking, Geographic View) with synced filters for date range, company type, company, product and state. File: [dashboard/cfpb_complaints.pbix](dashboard/cfpb_complaints.pbix); build guide: [dashboard/POWERBI_GUIDE.md](dashboard/POWERBI_GUIDE.md).
+Five interactive Power BI pages (Executive Overview, Product & Issue Trends, Company Benchmarking, Geographic View, Early Warning) with synced filters for date range, company type, company, product and state. File: [dashboard/cfpb_complaints.pbix](dashboard/cfpb_complaints.pbix); build guide: [dashboard/POWERBI_GUIDE.md](dashboard/POWERBI_GUIDE.md).
 
 **Executive Overview:** KPIs, the monthly trend with a 12-month average, and complaints by product
 
@@ -63,6 +63,10 @@ Four interactive Power BI pages (Executive Overview, Product & Issue Trends, Com
 **Geographic View:** complaints per 100K residents by state and census region
 
 ![Geographic View](images/dashboard_geo.png)
+
+**Early Warning:** every company-month flagged by the early-warning rule, largest spikes first
+
+![Early Warning](images/dashboard_alerts.png)
 
 *Screenshots show the default view, which excludes the three credit bureaus. A live link isn't available because Power BI's Publish to web requires a work or school account; open the `.pbix` in Power BI Desktop (free) to explore it.*
 
