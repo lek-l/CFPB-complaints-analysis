@@ -77,6 +77,12 @@ An automated monitor ([sql/analysis/17_early_warning.sql](sql/analysis/17_early_
 
 Statistical tests for every Regions-vs-peer comparison (two-proportion z-tests, Wilson confidence intervals, Holm correction) are in [notebooks/08_significance_tests.py](notebooks/08_significance_tests.py).
 
+## Future work
+
+- **Root-cause analysis of complaint text.** The consumer's chosen category is often too broad to act on: "Managing an account" is the most common issue at Regions (33% of its complaints) but doesn't say what went wrong. The plan is to classify a sample of the free-text complaint narratives (which the CFPB moved to its [FOIA Reading Room archive](https://www.consumerfinance.gov/foia-requests/foia-electronic-reading-room/cfpb-consumer-complaint-database-narratives-archive/) in Aug 2026) into specific root causes such as frozen funds, fees and fraud handling, using an LLM. The labels would then be validated against a manually labeled sample, measuring accuracy and agreement (Cohen's kappa).
+- **Daily early-warning alerts.** Move the monitor from monthly to daily counts to flag surges within days instead of within the month.
+- **Automated refresh.** Schedule the pipeline to pull the CFPB's daily update so the dashboard stays current.
+
 ## How it works
 
 ```
