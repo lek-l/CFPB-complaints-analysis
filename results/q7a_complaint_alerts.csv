@@ -1,0 +1,39 @@
+month,company_name,complaints,baseline_mean,times_baseline,z_score
+2020-06,PNC Bank N.A.,1065,155.0,6.9,11.4
+2020-07,PNC Bank N.A.,1062,233.0,4.6,3.0
+2020-11,"CBC Companies, Inc.",205,27.0,7.6,4.6
+2021-03,"Paypal Holdings, Inc",833,248.0,3.4,6.6
+2021-03,"Coinbase, Inc.",200,45.0,4.5,4.2
+2021-05,BBVA FINANCIAL CORPORATION,454,75.0,6.0,23.0
+2022-09,"Credit Karma, LLC",365,22.0,16.5,33.0
+2022-09,EdFinancial Services,465,18.0,26.6,31.0
+2022-10,MOHELA,351,27.0,13.1,11.8
+2022-10,"Maximus Federal Services, Inc.",224,66.0,3.4,4.3
+2022-11,"SANTANDER HOLDINGS USA, INC.",209,26.0,8.2,3.0
+2023-01,WELLS FARGO & COMPANY,5538,902.0,6.1,26.4
+2023-08,"Westlake Services, LLC",386,104.0,3.7,10.2
+2023-10,MOHELA,740,234.0,3.2,5.7
+2023-10,"Nelnet, Inc.",703,183.0,3.8,5.5
+2023-10,"Maximus Federal Services, Inc.",361,110.0,3.3,4.2
+2024-02,CL Holdings LLC,752,174.0,4.3,17.3
+2024-03,"ID Analytics, Inc.",222,57.0,3.9,6.8
+2024-03,CL Holdings LLC,752,225.0,3.3,3.1
+2024-04,"ID Analytics, Inc.",250,69.0,3.6,3.4
+2024-05,"Navient Solutions, LLC.",495,127.0,3.9,9.4
+2024-09,Advanced Resolution Services Inc.,207,51.0,4.0,6.1
+2024-09,"Navient Solutions, LLC.",672,197.0,3.4,3.9
+2024-10,Advanced Resolution Services Inc.,262,66.0,3.9,3.9
+2024-12,"John C. Heath, Attorney at Law, PLLC",533,5.0,98.4,124.1
+2024-12,ROBINHOOD MARKETS INC.,242,62.0,3.9,9.4
+2025-01,"Block, Inc.",31327,287.0,109.3,644.6
+2025-01,"Early Warning Services, LLC",17146,288.0,59.6,233.2
+2025-01,CAPITAL ONE FINANCIAL CORPORATION,7601,1708.0,4.5,51.3
+2025-01,NAVY FEDERAL CREDIT UNION,8302,638.0,13.0,27.3
+2025-01,"CBC Companies, Inc.",3354,579.0,5.8,10.5
+2025-03,"Nelnet, Inc.",1470,324.0,4.5,7.7
+2025-03,EdFinancial Services,423,123.0,3.5,7.1
+2025-03,"Maximus Federal Services, Inc.",673,202.0,3.3,5.5
+2025-10,Chime Financial Inc,1513,481.0,3.1,7.1
+2026-02,"Rocket Mortgage, LLC",251,84.0,3.0,4.4
+2026-03,"Rocket Mortgage, LLC",503,99.0,5.1,6.6
+2026-04,"Waypoint Resource Group, LLC",208,24.0,8.7,5.1

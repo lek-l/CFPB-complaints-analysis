@@ -1,0 +1,11 @@
+test,group_a,rate_a_pct,ci95_a,n_a,group_b,rate_b_pct,ci95_b,n_b,diff_pts,z,p_value,rate_ratio,rate_ratio_ci95,significant_at_0.05
+"Relief rate (closed complaints), 2018-Aug 2026",Regions,25.14,24.1-26.2,6948,Peers pooled,19.42,19.1-19.8,44049,5.72,11.04,2.55e-28,,,True
+"Monetary relief rate (closed complaints), 2018-Aug 2026",Regions,15.21,14.4-16.1,6948,Peers pooled,13.7,13.4-14.0,44049,1.51,3.38,7.23e-04,,,True
+"Overdraft share of complaints, 2025",Regions,10.06,8.4-12.0,1113,Peers pooled,4.04,3.6-4.5,6903,6.02,8.65,4.97e-18,,,True
+"Overdraft share of complaints, 2018-2025",Regions,7.67,7.0-8.4,6128,Peers pooled,3.45,3.3-3.6,38048,4.22,15.59,8.87e-55,,,True
+Relief rate vs each peer (Holm-adjusted p),Regions,25.14,24.1-26.2,6948,Fifth Third,12.2,11.6-12.8,11078,12.94,22.41,1.59e-110,,,True
+Relief rate vs each peer (Holm-adjusted p),Regions,25.14,24.1-26.2,6948,Citizens,15.8,15.2-16.4,13487,9.34,16.14,5.72e-58,,,True
+Relief rate vs each peer (Holm-adjusted p),Regions,25.14,24.1-26.2,6948,Huntington,31.62,30.5-32.7,7126,-6.47,-8.51,5.14e-17,,,True
+Relief rate vs each peer (Holm-adjusted p),Regions,25.14,24.1-26.2,6948,M&T,22.11,21.1-23.1,6668,3.04,4.17,6.08e-05,,,True
+Relief rate vs each peer (Holm-adjusted p),Regions,25.14,24.1-26.2,6948,KeyCorp,23.66,22.6-24.8,5690,1.49,1.94,0.053,,,False
+"Complaints per $1B deposits, 2025 (rate ratio)",Regions,,,1113,Peers pooled,,,6903,,1.79,0.074,1.059,0.994-1.129,False

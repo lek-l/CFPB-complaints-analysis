@@ -89,3 +89,15 @@ ax.set_ylim(0, None)
 ax.set_ylabel("Share of the bank's complaints (%)")
 finish(fig, ax, "Overdraft complaints at Regions are 2.5x the peer rate and rising again",
        "'Problem caused by your funds being low' as a share of each bank's complaints, by year", "overdraft_share.png")
+
+# 4. Size-adjusted overdraft burden: complaints per $1B of deposits (FDIC), 2025
+z = pd.read_csv(RES / "q8b_size_adjusted_scorecard.csv").sort_values("overdraft_per_bn_2025")
+fig, ax = plt.subplots(figsize=(8, 3.6))
+ax.barh(z["bank"], z["overdraft_per_bn_2025"], color=[BLUE if b == "Regions" else "#c3c2b7" for b in z["bank"]], height=0.6)
+for y, v in enumerate(z["overdraft_per_bn_2025"]):
+    ax.text(v + 0.01, y, f"{v:.2f}", va="center", fontsize=9, color=INK)
+ax.set_xlabel("Overdraft complaints per $1B of deposits")
+ax.grid(axis="y", visible=False)
+reg = z.set_index("bank").loc["Regions"]
+finish(fig, ax, f"Adjusted for bank size, Regions' overdraft complaints are {reg.overdraft_ratio_to_peer_avg_2025:.1f}x the peer average",
+       "2025 overdraft complaints per $1B of year-end deposits (FDIC Call Reports)", "overdraft_per_billion.png")
