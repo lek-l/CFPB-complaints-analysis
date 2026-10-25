@@ -56,17 +56,14 @@ Each part ends with a **checkpoint**: numbers your dashboard must show. They com
 
 ✅ **Checkpoint 2:** Model view shows the fact table in the middle with 5 dimensions around it, like a star.
 
-## Part 3 — Add the DAX measures (30–45 min)
+## Part 3 — Add the DAX measures (10 min)
 
-1. **Home > Enter data** → name the table `_Measures` → **Load**. (A dedicated table keeps measures in one place at the top of the field list.)
-2. Select `_Measures` → **Home > New measure** → paste one measure from [`measures.dax`](measures.dax) → press Enter. Repeat for each measure, in file order (later ones reference earlier ones).
-3. After adding the first measure, delete the placeholder `Column1` from `_Measures`.
-4. **Format each measure** (select it → **Measure tools** ribbon):
-   - Counts (`Complaints`, `Closed Complaints`, etc.): Whole number, thousands separator.
-   - Every `%` measure and `Relief Rate vs Peer Avg`: **Percentage, 1 decimal**.
-   - `Complaints 3M Avg`, `Complaints 12M Avg`, `Complaints per 100K (annualized)`, `Complaints Index (2018 = 100)`: Whole number.
-   - `Latest Data Month`: Date, format `mmm yyyy`.
-5. Optional but tidy: in Model view, select measures and set **Display folder** (`Counts`, `Rates`, `Time`, `Geography`, `Peers`).
+1. **Home > Enter data** → name the table `_Measures` → **Load** (or **Create**, then **Close & Apply** if the Power Query editor opens). A dedicated table keeps measures in one place at the top of the field list.
+2. Open **TMDL view** (the `</>` icon in the left rail), click in the editor, and paste the whole of [`measures.tmdl`](measures.tmdl). Click **Apply**.
+   - This creates all 29 measures at once, already formatted (whole numbers, 1-decimal percentages) and grouped into display folders: Counts, Response rates, Time, Geography, Market, Peers.
+   - The editor may list "Cannot find name" problems for measures that reference each other. They're harmless: the editor checks the script against the model *before* it's applied. Click **Apply** again and they clear.
+   - `measures.tmdl` is generated from [`measures.dax`](measures.dax) by `python dashboard/build_tmdl.py`; `measures.dax` stays the readable source of truth.
+3. In the **Data** pane, set `dim_date[year]`, `quarter` and `month_num` to **Don't summarize** (**Column tools > Summarization**). Otherwise Power BI adds the years up ("Sum of year") when you put them on an axis.
 
 **Key DAX ideas to be able to explain:**
 - `DIVIDE` instead of `/`: returns blank instead of an error when the denominator is 0.
@@ -105,8 +102,8 @@ Put a row of 5 slicers across the top of **Executive Overview**:
 | State | `dim_geography[state_name]` | Dropdown, search on |
 
 - **Company type default:** select *Other company* and *Regions peer group* (Ctrl+click). That leaves out the three credit bureaus, which would otherwise dominate every chart. The `Credit Bureau Share %` card on page 1 keeps their scale visible.
-- **Sync them:** **View > Sync slicers** → for each slicer tick **Sync** and **Visible** on all 4 pages. Filters now carry across pages, like a real product.
-- Add a **Reset** button: **Insert > Buttons > Reset**, action *Bookmark*. First create a bookmark of the default state (**View > Bookmarks > Add**, name it "Default").
+- **Make slicers 2–5 dropdowns that allow several selections:** Format > search `style` → **Dropdown**; search `selection` → **Single select Off**.
+- **Copy them to every page:** select all 5 slicers (Ctrl+click) → **Ctrl+C** → go to each other page → **Ctrl+V** → choose **Sync** when asked. Filters now carry across pages, like a real product. (The **View > Sync slicers** pane does the same, but copy-paste was more reliable.)
 
 ## Part 5 — Build the pages (2–3 h)
 
@@ -120,85 +117,67 @@ General rules (these follow the data-viz guidelines the project uses):
 
 *Answers: how big is the problem, is it growing, and how well do companies respond?*
 
-1. **KPI row** (Insert > **Card (new)**, one card with several measures, or 5 separate cards):
-   `Complaints` · `Complaints YoY %` · `Timely Response %` · `Relief Rate %` · `Credit Bureau Share %`.
-   - For `Complaints YoY %` to make sense, it needs a one-year context. Add a card-level filter `dim_date[year]` = latest full year (2025), and title it "YoY growth, 2025".
-2. **Line chart:** "Monthly complaints with 12-month average"
-   - X-axis: `dim_date[month_start]` (right-click the field → use the actual date, not the Date Hierarchy)
-   - Y-axis: `Complaints` and `Complaints 12M Avg` (two lines, **same scale**, so a single axis is correct)
-   - Visual filter: `dim_date[is_complete_month]` = True
-3. **Bar chart:** "Complaints by product": Y `dim_product[product_group]`, X `Complaints`, sorted descending.
-4. **Table:** "Top 10 companies": `dim_company[company_name]`, `Complaints`, `Timely Response %`, `Relief Rate %`. Filter pane → `company_name` → *Top N* = 10 by `Complaints`.
-5. **Text box** (Insert > Text box) with one sentence of the key insight, e.g. *"Excluding the credit bureaus, complaints more than doubled from mid-2024 to Aug 2026 (12-month average 30K → 71K per month)."*
+1. **KPI cards** (4 Cards): `Complaints` · `Timely Response %` · `Relief Rate %` · `Credit Bureau Share %`.
+2. **Line chart:** "Complaints more than doubled since mid-2024 (12-month average)"
+   - X-axis: `dim_date[month_start]` (choose the field itself, not *Date Hierarchy*)
+   - Y-axis: `Complaints` and `Complaints 12M Avg`. Both count complaints, so one axis is correct.
+   - Colors: `Complaints` gray `#c3c2b7`, `Complaints 12M Avg` blue `#2a78d6`, stroke width 3, so the trend is the focus and the monthly spikes are context.
+3. **Bar chart:** "Complaints by product": `dim_product[product_group]` by `Complaints`, sorted descending.
 
-✅ **Checkpoint 5.1:** Set Company type to all three values (bureaus included) and Date range to 2025 → Complaints **5,442,963**, YoY **+99.1%**.
+✅ **Checkpoint 5.1** (default view, bureaus excluded): Complaints **3,125,047**, Timely **97.3%**, Relief **17.3%**, Credit Bureau Share **81.2%**. The monthly line peaks at about **124K in Jan 2025**.
 
 ### Page 2 — Product & Issue Trends
 
 *Answers business question 1: which products and issues, and how they're trending.*
 
-1. **Line chart with small multiples:** "Yearly complaints by product"
-   - X `dim_date[year]`, Y `Complaints`, **Small multiples** `dim_product[product_group]`
-   - Each panel gets its own trend with one color, which avoids 11 colors on one chart.
-   - Format > Small multiples > **Y-axis: independent scales** so small products aren't flattened (say so in the subtitle).
-2. **Matrix:** "Year-over-year change by product"
-   - Rows `product_group`, Columns `dim_date[year]`, Values `Complaints YoY %`
-   - Visual filter: year 2019–2025 (full years)
-   - Format > Cell elements > **Background color** → fx → Gradient: lowest `#cde2fb` (light blue), highest `#d03b3b` (red) so fast growth stands out.
-3. **Decomposition tree** (Insert > More visuals > Decomposition tree): Analyze `Complaints`; Explain by `product_group`, `subproduct`, `issue`, `subissue`. In the finished report, click **+** to drill down. It's a great interactive talking point for interviews.
-4. **Bar chart:** "Top 10 issues": `dim_issue[issue]` by `Complaints`, Top N = 10.
+1. **Line chart with small multiples:** "Complaints by product, per year"
+   - X `dim_date[year]`, Y `Complaints`, **Small multiples** `dim_product[product_group]`. Each product gets its own panel, which avoids 11 colors on one chart.
+   - Format > **Y-axis > Range**: **Shared y-axis Off**, **Scale to fit On**, so small products aren't flattened. Subtitle: "Full years 2018–2025; each panel has its own scale".
+   - Format > **Small multiples > Layout**: 4 rows × 3 columns.
+   - Visual filter `year` ≤ 2025, so the partial year 2026 doesn't look like a drop.
+2. **Bar chart:** "Top 10 complaint issues": `dim_issue[issue]` by `Complaints`, visual filter *Top N* = 10 by `Complaints`.
 
-✅ **Checkpoint 5.2:** Bureaus included, no date filter: Credit reporting row in the matrix, 2025 column ≈ **+103%** (4,810,301 vs 2,365,586).
+✅ **Checkpoint 5.2** (default view): top issue **Incorrect information on your report** (467,113), then **Attempts to collect debt not owed** (381,233). Mortgage is the only roughly flat panel.
 
 ### Page 3 — Company Benchmarking
 
-*Answers business questions 2 and 4: worst responders, and Regions vs peers.*
+*Answers business questions 2 and 4: Regions vs peers, and the companies least likely to give relief.*
 
-**Top half: Regions vs peers.** Give every visual in this half a visual-level filter `dim_company[company_type]` = *Regions peer group*.
+Give the first three visuals a visual-level filter `dim_company[company_type]` = *Regions peer group*.
 
-1. **Table scorecard:** "Regions vs peer banks": `company_label`, `Complaints`, `Timely Response %`, `Relief Rate %`, `Relief Rate vs Peer Avg`, `Monetary Relief %`.
-   - Conditional formatting on `Relief Rate vs Peer Avg`: Font color → Rules: < 0 → `#d03b3b`, ≥ 0 → `#006300`. Add ▲/▼ icons (Cell elements > Icons) so color isn't the only cue.
-2. **Bar chart:** "Relief rate by bank": Y `company_label`, X `Relief Rate %`.
-   - **Focus + context coloring:** Format > Bars > Colors > **fx** → Format style *Field value* → `Bar Color (Regions Highlight)`. Regions is blue and peers gray, so the eye goes straight to Regions.
-   - Analytics pane (magnifier icon) → **Average line** labelled "Peer group average".
-3. **Matrix heatmap:** "Complaint mix by product": Rows `company_label`, Columns `product_group`, Values `Share of Company Complaints %`. Background color gradient white → `#104281` (one hue, light to dark). A heatmap shows the mix without 11 legend colors.
-4. **Line chart:** "Overdraft complaints: Regions vs peers": X `dim_date[year]`, Y `Overdraft Share % (Regions)` and `Overdraft Share % (Peers)`. Set the Regions line to blue `#2a78d6` and the peers line to gray `#898781`. Turn on data labels for the last point only (Format > Data labels > *Customize series*).
-5. **Line chart:** "Complaint growth (2018 = 100)": X `year`, Y `Complaints Index (2018 = 100)`, Legend `company_label`. Filter year 2018–2025.
+1. **Table:** "Regions vs peer banks": `company_label` (renamed *Bank*), `Complaints`, `Timely Response %`, `Relief Rate %`, `Relief Rate vs Peer Avg`, `Monetary Relief %`. Totals off; sorted by Relief Rate % descending.
+2. **Bar chart:** "Relief rate: Regions ranks #2 of 6": `company_label` by `Relief Rate %`, data labels on.
+   - **Focus + context coloring:** Format > Bars > Colors > **fx** → *Field value* → `Bar Color (Regions Highlight)`. Regions is blue and peers gray.
+3. **Line chart:** "Overdraft complaints: Regions vs peers": X `year`, Y `Overdraft Share % (Regions)` (blue `#2a78d6`, width 3) and `Overdraft Share % (Peers)` (gray `#898781`). Visual filter `year` ≤ 2025; Y-axis minimum 0 so the gap isn't exaggerated.
+4. **Table:** "Highest no-relief rates (1,000+ closed complaints)": `company_name` (renamed *Company*), `Closed Complaints`, `No Relief Rate %`, `Monetary Relief %`.
+   - Visual filter: `Closed Complaints` ≥ 1000.
+   - Sort by `No Relief Rate %` descending, then **Shift+click** `Closed Complaints` so the largest of the many 100% companies come first. Totals off.
 
-**Bottom half: all companies (business question 2).**
-
-6. **Table:** "Companies with the highest no-relief rate (≥1,000 closed complaints)": `company_name`, `Closed Complaints`, `No Relief Rate %`, `Monetary Relief %`, `Timely Response %`.
-   - Visual filter: `Closed Complaints` *is greater than or equal to* 1000 (drag the measure into the filter pane).
-   - Sort by `No Relief Rate %` descending, then Ctrl+click `Closed Complaints` for the tie-break.
-
-✅ **Checkpoint 5.3:** Scorecard, no date filter → Regions: Relief Rate **25.1%**, vs peer avg **+4.1%**, Timely **99.96%** (use 2 decimals to see it). Huntington 31.6%, Fifth Third 12.2%.
+✅ **Checkpoint 5.3:** Regions: Relief Rate **25.1%**, vs peer avg **+4.1%**; Huntington 31.6%, Fifth Third 12.2%. Overdraft line ends at **10.1%** (Regions) vs **4.0%** (peers). Top no-relief company: **Early Warning Services** (36,481 closed complaints).
 
 ### Page 4 — Geographic View
 
 *Answers business question 3: where complaints come from, per capita.*
 
-1. **Map:** Insert **Azure Maps** (or **Filled map** if that's what your version offers). Location `dim_geography[state_name]`, and color by `Complaints per 100K (annualized)`.
-   - Filled-layer colors: *Gradient*, min `#cde2fb` → max `#104281` (single-hue sequential, so darker = more).
-   - If maps are disabled in your version or tenant, use **Shape map** (Options > Preview features) with the US states map, or skip the map and make the bar chart below the main visual.
-2. **Bar chart:** "Complaints per 100K residents by state": Y `state_name`, X `Complaints per 100K (annualized)`, sorted descending, Top N 15.
-3. **Table:** "By census region": `census_region`, `Population`, `Complaints`, `Complaints per 100K (annualized)`. Visual filter `dim_geography[is_state]` = True.
-4. **Card:** `Complaints per 100K (annualized)` with a title that responds to the filters. For a dynamic title: Format > Title > fx → create a measure such as
-   `Map Title = "Complaints per 100K residents, " & FORMAT(MIN(dim_date[date]),"mmm yyyy") & " – " & FORMAT([Latest Data Month],"mmm yyyy")`.
+1. **Filled map:** "Complaints per 100K residents, per year"
+   - If Power BI says map visuals are disabled: **File > Options and settings > Options > Global > Security** → tick **Use Map and Filled Map visuals**. (Maps send the location values, here public state names, to Microsoft's mapping service.)
+   - Location `dim_geography[state_name]`; visual filter `is_state` = True (otherwise territory and military codes get placed on the wrong continent).
+   - Format > **Fill colors > fx** → *Gradient* on `Complaints per 100K (annualized)`, min `#cde2fb` → max `#104281`.
+   - Format > **Map settings**: Style **Grayscale**; **Auto zoom Off**, then zoom to the lower 48 states.
+2. **Bar chart:** "Top 15 states per 100K residents": `state_name` by `Complaints per 100K (annualized)`; visual filters `is_state` = True and *Top N* = 15.
+3. **Table:** "By census region": `census_region`, `Population`, `Complaints`, `Complaints per 100K (annualized)`; visual filter `is_state` = True; sorted by per-100K descending; totals off.
 
-✅ **Checkpoint 5.4:** Bureaus included, Date range = 2025 → Georgia **3,777** per 100K (#1), South region **2,358**.
+✅ **Checkpoint 5.4** (default view, full date range): **District of Columbia ~223**, **Georgia ~215**, **Florida ~166** per 100K per year; South region **130**.
 
-## Part 6 — Polish (30 min)
+## Part 6 — Polish and screenshots
 
-- **Tooltips:** for key visuals, add `Relief Rate %` and `Timely Response %` to the *Tooltips* well so hovering shows context.
-- **Edit interactions:** select a slicer or chart → **Format > Edit interactions** → make sure the Credit Bureau Share card is set to **None** (it should never filter).
-- **Alt text:** Format > General > Alt text for each chart (accessibility, and reviewers notice).
-- **Mobile layout** (optional): View > Mobile layout, drag in the KPI cards and one chart per page.
-- **Performance check:** View > Performance analyzer → Start recording → Refresh visuals. Every visual should take under ~1 s thanks to the aggregate table.
-- Take screenshots of each page (Win+Shift+S) → save to `images/` as `dashboard_overview.png`, `dashboard_products.png`, `dashboard_benchmark.png`, `dashboard_geo.png`.
+- **Titles state the takeaway**, and auto-generated subtitles ("X by Y") are turned off.
+- Save a screenshot of each page to `images/` as `dashboard_overview.png`, `dashboard_products.png`, `dashboard_benchmark.png`, `dashboard_geo.png`; the README shows them.
+- Optional extras: tooltips with `Relief Rate %` and `Timely Response %`, alt text for each chart, and **View > Performance analyzer** to confirm visuals load in under a second (thanks to the monthly aggregate table).
 
-## Part 7 — Publish
+## Part 7 — Sharing
 
-This part needs a decision about your Microsoft account (see the project chat). We'll do it together once the report is built.
+Power BI's *Publish to web* needs a work or school Microsoft account and an admin setting, so this project shares the dashboard as **screenshots in the README plus the `.pbix` file** in the repo. Anyone can open the `.pbix` in the free Power BI Desktop.
 
 ---
 
@@ -211,3 +190,8 @@ This part needs a decision about your Microsoft account (see the project chat). 
 | Month names out of order | Sort `month_name` by `month_num` (Part 2, step 4) |
 | A dimension doesn't filter a chart | Missing relationship, or cross-filter direction set wrong |
 | "Can't determine relationships between the fields" | You used a column from the fact table in a slicer; use the dimension's column instead |
+| A chart shows "Sum of year" | Set `dim_date[year]` to **Don't summarize** (Part 3, step 3) and move `year` to the X-axis |
+| Ticking fields created a bar chart instead of a line | Select the visual and click the **Line chart** icon; the fields stay in place |
+| Format options show *Bars/Ribbons* on a "line chart" | It's still a column chart; switch the visual type to Line chart |
+| A slicer always has one value selected and cards show "--" | Format > search `selection` → **Single select Off** (and **Force selection Off**), then clear the slicer with its eraser icon |
+| Numbers show as 13,38,33,983 | Windows region is India; set **Options > Regional settings** to English (United States), or change the Windows region format |
