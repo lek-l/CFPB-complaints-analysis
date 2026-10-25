@@ -20,15 +20,11 @@ def split_queries(sql: str) -> list[tuple[str, str]]:
 
 
 if __name__ == "__main__":
-    os.chdir(ROOT)  # queries read files such as results/llm_classifications.csv by relative path
+    os.chdir(ROOT)  # queries read files such as results/q7a_complaint_alerts.csv by relative path
     OUT.mkdir(exist_ok=True)
     con = duckdb.connect(str(ROOT / "data" / "complaints.duckdb"), read_only=True)
     for sql_file in sorted((ROOT / "sql" / "analysis").glob("*.sql")):
-        sql = sql_file.read_text(encoding="utf-8")
-        if "llm_classifications.csv" in sql and not (OUT / "llm_classifications.csv").exists():
-            print(f"{sql_file.name:<26} skipped: run notebooks/05_classify_narratives.py first")
-            continue
-        for name, query in split_queries(sql):
+        for name, query in split_queries(sql_file.read_text(encoding="utf-8")):
             df = con.sql(query).df()
             df.to_csv(OUT / f"{name}.csv", index=False)
             print(f"{sql_file.name:<26} {name:<28} {len(df):>4} rows")

@@ -20,8 +20,8 @@ Excluding the credit bureaus, the 12-month average of complaints industry-wide *
 
 ## Recommendations
 
-1. **Run an overdraft deep-dive with a peer-parity target.** Classify the overdraft complaints by root cause (fee disclosure, transaction ordering, posting timing) to find the specific practice driving them. Target: bring the overdraft share from 10.1% toward the 4.0% peer level, tracked quarterly.
-2. **Prioritize the checking-account experience.** "Managing an account" is a catch-all category. Use the narrative classification to split it into specific causes (e.g. frozen funds, closures, fees), then assign owners to the top two.
+1. **Run an overdraft deep-dive with a peer-parity target.** Review the overdraft complaints by root cause (fee disclosure, transaction ordering, posting timing) to find the specific practice driving them. Target: bring the overdraft share from 10.1% toward the 4.0% peer level, tracked quarterly.
+2. **Prioritize the checking-account experience.** "Managing an account" is a catch-all category. Analyze the complaint narratives (for example with text classification) to split it into specific causes such as frozen funds, closures and fees, then assign owners to the top two.
 3. **Adopt early-warning monitoring.** This project includes a working rule: flag a company-month at 3x its 12-month norm and 3+ standard deviations above it. Back-tested, it raised 38 alerts in 80 months (about one every two months) and caught all four companies behind the January 2025 industry surge. Pair it with response playbooks for regulatory announcements affecting Regions or its peers.
 
 *Method and caveats: complaints are unverified consumer submissions; comparisons use rates and mix rather than raw counts because the banks differ in size. Full analysis and SQL: see the project README.*

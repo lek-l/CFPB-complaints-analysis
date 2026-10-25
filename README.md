@@ -1,10 +1,10 @@
 # Consumer Financial Complaints Analysis
 
-An end-to-end analytics project on the **CFPB Consumer Complaint Database**: 17.9M complaints about U.S. banks and financial companies, taken from raw download to a tested star-schema database, SQL analysis, an interactive Power BI dashboard, and LLM classification of complaint narratives. It includes a peer benchmark of **Regions Bank** against five similar regional banks.
+An end-to-end analytics project on the **CFPB Consumer Complaint Database**: 17.9M complaints about U.S. banks and financial companies, taken from raw download to a tested star-schema database, SQL analysis, an interactive Power BI dashboard. It includes a peer benchmark of **Regions Bank** against five similar regional banks.
 
-**Stack:** Python (pandas) · SQL (DuckDB) · Power BI + DAX · statistical testing · FDIC & Census APIs · LLM API (Claude, or open-weight GPT-OSS via Groq) · Parquet · Git
+**Stack:** Python (pandas) · SQL (DuckDB) · Power BI + DAX · statistical testing · FDIC & Census APIs · Parquet · Git
 
-> **Status:** complete: data pipeline, SQL analysis, statistical tests, early-warning system and the 5-page Power BI dashboard. The LLM classification pipeline is built and tested; the classification run is optional and not yet done.
+> **Status:** complete: data pipeline, SQL analysis, statistical tests, early-warning system and the 5-page Power BI dashboard.
 
 ---
 
@@ -15,9 +15,8 @@ An end-to-end analytics project on the **CFPB Consumer Complaint Database**: 17.
 3. How are complaints distributed geographically, by state and per capita?
 4. How does Regions Bank compare with similar regional banks on volume, top issues and response performance?
 5. What are the month-over-month trends, with rolling averages?
-6. *(LLM)* What root causes do consumers describe in their own words, and which get resolved?
-7. Can complaint surges be detected automatically, early enough to act on?
-8. How does Regions compare once bank size is accounted for, and are the gaps statistically significant?
+6. Can complaint surges be detected automatically, early enough to act on?
+7. How does Regions compare once bank size is accounted for, and are the gaps statistically significant?
 
 ## Key findings
 
@@ -72,12 +71,6 @@ Five interactive Power BI pages (Executive Overview, Product & Issue Trends, Com
 
 **29 DAX measures** ([dashboard/measures.dax](dashboard/measures.dax)) cover timely-response %, relief rate, YoY and MoM change, 3- and 12-month rolling averages, annualized complaints per 100K residents, and peer-average benchmarks. The build guide checks the measures against the SQL results page by page.
 
-## LLM root-cause analysis
-
-The CFPB stopped publishing complaint narratives on 2026-08-14 and moved them to a FOIA archive. This project downloads that archive (3.56M narratives), draws a stratified sample of **10,162** (6,000 market-wide plus 700 per peer bank), and classifies each into one of **10 root causes** using structured LLM output. A **blind human review** of 200 complaints (accuracy, Cohen's kappa) and an automatic consistency check against the CFPB's own issue field validate the labels. Method: [docs/llm_methodology.md](docs/llm_methodology.md).
-
-<!-- Add root-cause findings and validation metrics here after the classification run. -->
-
 ## Early-warning system
 
 An automated monitor ([sql/analysis/17_early_warning.sql](sql/analysis/17_early_warning.sql)) flags any company-month where complaints jump to at least **3x the company's own 12-month norm** and at least 3 standard deviations above it. It fires **38 times in the 80 months from 2020 to Aug 2026 (about one alert every two months)**, a realistic workload for a monitoring team. Back-tested on January 2025, it flags all four companies behind that month's surge, Block/Cash App (109x normal), Early Warning/Zelle (60x), Navy Federal (13x) and Capital One (4.5x), plus one other (CBC Companies).
@@ -91,8 +84,8 @@ CFPB CSV (5.4 GB) ─► DuckDB raw table ─► typed & cleaned staging ─► 
                                                                          │
                           ┌──────────────────────────────────────────────┼────────────────────────┐
                           ▼                                              ▼                        ▼
-               SQL analysis (22 queries)               Parquet export (2.4M-row monthly     LLM classification
-               → results/*.csv                         aggregate) → Power BI dashboard      of narrative sample
+               SQL analysis (22 queries)               Parquet export (2.4M-row monthly     Statistical tests
+               → results/*.csv                         aggregate) → Power BI dashboard      (significance, size-adjusted)
 ```
 
 **Star schema:** `fact_complaints` (one row per complaint) joined to `dim_company`, `dim_product`, `dim_issue`, `dim_geography` (with Census 2025 population) and `dim_date`.
@@ -121,13 +114,6 @@ python run_pipeline.py            # load, clean, model, test, export for Power B
 python notebooks/03_run_analysis.py   # all SQL analysis -> results/
 python notebooks/08_significance_tests.py  # statistical tests -> results/q9_significance_tests.csv
 python notebooks/07_readme_charts.py  # README charts -> images/
-
-# LLM text analysis (optional; needs ANTHROPIC_API_KEY or GROQ_API_KEY)
-python data/download_narratives.py
-python notebooks/04_build_narrative_sample.py
-python notebooks/05_classify_narratives.py --provider claude --dry-run
-python notebooks/05_classify_narratives.py --provider claude
-python notebooks/06_validate_classifications.py make-review
 ```
 
 Then open `dashboard/cfpb_complaints.pbix` in Power BI Desktop and refresh.
@@ -137,16 +123,15 @@ Then open `dashboard/cfpb_complaints.pbix` in Power BI Desktop and refresh.
 ```
 data/         download scripts, Census and FDIC reference data (raw data is gitignored)
 sql/          00-04 pipeline (load, clean, schema, tests, export); analysis/ business-question queries
-notebooks/    profiling, analysis runner, LLM sample / classification / validation, chart rendering
-llm/          provider-neutral taxonomy and prompt; Claude and Groq backends
+notebooks/    profiling, analysis runner, significance tests, chart rendering
 dashboard/    Power BI report, DAX measures, theme, build guide
 results/      CSV output of every analysis query
-docs/         cleaning decisions, findings, LLM method, stakeholder brief
+docs/         cleaning decisions, findings, stakeholder brief
 images/       charts and dashboard screenshots
 ```
 
 ## Data notes
 
-- Source: [CFPB Consumer Complaint Database](https://www.consumerfinance.gov/data-research/consumer-complaints/), snapshot downloaded 2026-09-22; narratives from the CFPB's FOIA Reading Room archive; bank deposits from the [FDIC BankFind API](https://api.fdic.gov/banks/) (year-end Call Reports); population from the U.S. Census Bureau.
+- Source: [CFPB Consumer Complaint Database](https://www.consumerfinance.gov/data-research/consumer-complaints/), snapshot downloaded 2026-09-22; bank deposits from the [FDIC BankFind API](https://api.fdic.gov/banks/) (year-end Call Reports); population from the U.S. Census Bureau.
 - Complaints are **unverified consumer submissions**. They show where customers report problems, not confirmed misconduct.
 - Complaint volume partly reflects a company's customer base, so cross-company comparisons use rates and mix.
